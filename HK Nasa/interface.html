@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prisma - Previsão Inteligente</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <img src="assets/sem fundo.png" alt="Logo Prisma" class="logo"> 
+            <h1>Prisma</h1>
+        </div>
+        <p class="subtitle">Decisões claras para dias perfeitos.</p>
+
+        <form id="forecastForm">
+            <input type="text" id="cityInput" placeholder="Digite uma cidade no Brasil" required>
+            
+            <div class="date-container">
+                <label for="dateInput">Selecione a Data do Evento</label>
+                <input type="date" id="dateInput" required>
+            </div>
+
+            <div class="event-container">
+                <label for="eventTypeSelect">Selecione o Tipo de Evento</label>
+                <select id="eventTypeSelect">
+                    <option value="piquenique.png">Piquenique</option>
+                    <option value="festa.png">Festa</option>
+                    <option value="casamento.png">Casamento</option>
+                    <option value="outros">Outros</option>
+                </select>
+            </div>
+
+            <fieldset class="period-options">
+                <legend>Selecione o Período</legend>
+                <div>
+                    <input type="radio" id="manha" name="periodo" value="Manhã" checked>
+                    <label for="manha">Manhã</label>
+                </div>
+                <div>
+                    <input type="radio" id="tarde" name="periodo" value="Tarde">
+                    <label for="tarde">Tarde</label>
+                </div>
+                <div>
+                    <input type="radio" id="noite" name="periodo" value="Noite">
+                    <label for="noite">Noite</label>
+                </div>
+            </fieldset>
+
+            <button type="submit" id="forecastButton">Realizar Previsão PRISMA</button>
+        </form>
+    </div>
+
+    <button id="reportButtonInitial" title="Reportar Clima Agora">+</button>
+
+    <div id="weatherModal" class="modal">
+        <div class="modal-wrapper">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <div id="modalBody">
+                    </div>
+            </div>
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <div id="userReportModal" class="user-report-modal">
+        <div class="user-report-modal-content">
+            <span class="close-button close-report-modal">&times;</span>
+            <h2>Reportar Condição Atual</h2>
+            <div class="user-report-modal-body">
+                <div id="userReportMap" class="user-report-map-container"></div>
+                <div class="weather-condition-selector">
+                    <button data-condition="Sol">☀️ Sol</button>
+                    <button data-condition="Nublado">☁️ Nublado</button>
+                    <button data-condition="Chuva">🌧️ Chuva</button>
+                    <button data-condition="Vento">💨 Vento</button>
+                    <button data-condition="Frio">🥶 Frio</button>
+                </div>
+            </div>
+            <button class="user-report-submit-button">Enviar Report</button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+
+</body>
+</html>

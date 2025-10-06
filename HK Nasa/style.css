@@ -1,0 +1,557 @@
+/* Reset Básico e Estilo Global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #f0f0f0;
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+    overflow: hidden;
+}
+
+/* --- CORREÇÃO DE EMPILHAMENTO (Z-INDEX) --- */
+.container {
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    position: relative; /* Garante o contexto de empilhamento */
+    z-index: 10; /* Fica acima do fundo, mas abaixo do modal */
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 0.5rem;
+}
+
+.logo {
+    width: 80px; /* Logo um pouco menor para alinhar com o título */
+}
+
+h1 {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 2.5rem;
+    background: linear-gradient(90deg, #D4AF37, #B083F3, #6A5ACD);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    font-weight: 300;
+    margin-bottom: 2rem;
+    color: #c0c0c0;
+}
+
+#forecastForm { display: flex; flex-direction: column; gap: 1rem; }
+#cityInput, #dateInput, #eventTypeInput { 
+    width: 100%; 
+    padding: 12px 15px; 
+    border: 1px solid rgba(255, 255, 255, 0.2); 
+    border-radius: 8px; 
+    background: rgba(0, 0, 0, 0.2); 
+    color: #f0f0f0; 
+    font-size: 1rem; 
+    font-family: 'Poppins', sans-serif;
+}
+#cityInput::placeholder, #eventTypeInput::placeholder { color: #aaa; }
+.date-container { text-align: left; }
+.date-container label { display: block; margin-bottom: 0.5rem; font-weight: 300; color: #c0c0c0; }
+#dateInput { color-scheme: dark; }
+.period-options { border: none; padding: 0; display: flex; justify-content: center; gap: 10px; }
+.period-options legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+.period-options input[type="radio"] { opacity: 0; position: fixed; width: 0; }
+.period-options label { display: inline-block; padding: 10px 20px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50px; background: rgba(0, 0, 0, 0.2); color: #c0c0c0; cursor: pointer; transition: all 0.3s ease; font-weight: 300; }
+.period-options label:hover { background: rgba(255, 255, 255, 0.1); border-color: #B083F3; }
+.period-options input[type="radio"]:checked + label { background: linear-gradient(90deg, #B083F3, #6A5ACD); color: white; font-weight: 600; border-color: #B083F3; box-shadow: 0 0 15px rgba(176, 131, 243, 0.3); }
+#forecastButton { padding: 15px; border: none; border-radius: 8px; background: linear-gradient(90deg, #6a3093 0%, #a044ff 50%, #f8d447 100%); background-size: 200% auto; color: white; font-size: 1.2rem; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; transition: all 0.4s ease; }
+#forecastButton:hover { background-position: right center; transform: translateY(-3px); box-shadow: 0 4px 20px rgba(160, 68, 255, 0.5); }
+
+
+/* --- ESTILOS DO MODAL (ATUALIZADOS) --- */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex; justify-content: center; align-items: center;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.modal.show { opacity: 1; visibility: visible; }
+
+.modal-wrapper {
+    display: flex; gap: 20px;
+    width: 90%; max-width: 1000px;
+    transform: translateY(-50px);
+    transition: transform 0.3s ease;
+}
+.modal.show .modal-wrapper { transform: translateY(0); }
+
+.modal-content {
+    background: #1e1e3f; padding: 2.5rem 2rem; border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative; max-height: 70vh; overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    flex: 1;
+}
+
+.close-button { position: absolute; top: 15px; right: 20px; color: #aaa; font-size: 32px; font-weight: bold; cursor: pointer; line-height: 1; transition: color 0.2s; z-index: 10;}
+.close-button:hover { color: white; }
+
+/* --- MAPA E ÍCONE DO MAPA --- */
+#map {
+    flex: 1; height: 70vh;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1;
+}
+.weather-map-icon {
+    background: rgba(30, 30, 63, 0.8);
+    border: 2px solid #B083F3;
+    border-radius: 50%;
+    width: 60px !important;
+    height: 60px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5rem;
+    box-shadow: 0 0 20px rgba(176, 131, 243, 0.5);
+}
+.user-report-icon {
+    background: rgba(255, 107, 107, 0.8);
+    border: 2px solid #fff;
+    border-radius: 50%;
+    width: 40px !important;
+    height: 40px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+    box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+}
+
+/* --- ESTILOS DO CONTEÚDO DO MODAL PRINCIPAL --- */
+#modalBody { text-align: center; }
+#modalBody h2 { margin-bottom: 0.5rem; color: #B083F3; font-size: 2rem; }
+#modalBody .period-subtitle { font-weight: 300; color: #c0c0c0; margin-bottom: 2rem; line-height: 1.4; font-size: 1.1rem; }
+#modalBody .results-container .main-info { margin-bottom: 2.5rem; }
+#modalBody .results-container .main-info .temperature { font-size: 5.5rem; font-weight: 700; line-height: 1; color: #fff; text-shadow: 0 0 25px rgba(255, 255, 255, 0.4); }
+#modalBody .results-container .main-info .rain-chance { font-size: 1.6rem; font-weight: 400; color: #D4AF37; margin-top: 0.8rem; }
+#modalBody .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem; text-align: left; background: rgba(0,0,0,0.3); padding: 1.8rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); }
+#modalBody .detail-item { display: flex; align-items: center; gap: 18px; }
+#modalBody .detail-item .icon { width: 45px; height: 45px; background: linear-gradient(45deg, #6A5ACD, #B083F3); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; color: #fff; box-shadow: 0 4px 15px rgba(106, 90, 205, 0.3); }
+#modalBody .detail-item .text span { display: block; font-size: 0.95rem; color: #aaa; }
+#modalBody .detail-item .text p { font-size: 1.3rem; font-weight: 600; color: #fff; line-height: 1.2; }
+.tips-container { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.1); text-align: left; }
+.tips-container h3 { color: #f8d447; font-weight: 600; margin-bottom: 1rem; text-align: center; }
+.tips-container ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.tips-container li { background: rgba(0, 0, 0, 0.2); padding: 12px 15px; border-radius: 8px; border-left: 3px solid #B083F3; display: flex; align-items: center; gap: 12px; font-weight: 300; color: #c0c0c0; font-size: 0.95rem; }
+.tips-container li::before { content: '💡'; font-size: 1.2rem; }
+
+/* Estilo para o botão de gerar imagem */
+#generateImageButton {
+    display: none; /* Começa escondido, o JS vai mostrar */
+    width: 100%;
+    margin-top: 2rem;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #f8d447; /* Amarelo da logo */
+    color: #1e1e3f; /* Cor escura do fundo */
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+#generateImageButton.show {
+    display: block; /* O JS usa essa classe para mostrar o botão */
+}
+#generateImageButton:hover {
+    background: #fff;
+    box-shadow: 0 0 15px rgba(248, 211, 71, 0.5);
+}
+
+/* --- Estilos do Botão FAB e do Modal de Report (sem alterações) --- */
+#reportButtonInitial { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: linear-gradient(45deg, #6A5ACD, #B083F3); color: white; border: none; border-radius: 50%; font-size: 3rem; line-height: 60px; text-align: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); cursor: pointer; z-index: 999; transition: all 0.3s ease; }
+#reportButtonInitial:hover { transform: scale(1.1) rotate(90deg); background: linear-gradient(45deg, #B083F3, #6A5ACD); }
+.user-report-modal { position: fixed; z-index: 1002; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+.user-report-modal.show { opacity: 1; visibility: visible; }
+.user-report-modal-content { background: #1e1e3f; padding: 2.5rem 2rem; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; position: relative; display: flex; flex-direction: column; gap: 1.5rem; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); transform: translateY(-50px); transition: transform 0.3s ease; }
+.user-report-modal.show .user-report-modal-content { transform: translateY(0); }
+.user-report-modal-content h2 { color: #D4AF37; text-align: center; margin-bottom: 1rem; }
+.user-report-modal-body { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+.user-report-map-container { flex: 1; min-width: 300px; height: 300px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); }
+.weather-condition-selector { display: flex; flex-direction: column; gap: 10px; flex: 0 0 150px; align-items: center; justify-content: center; }
+.weather-condition-selector button { background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; padding: 10px 15px; color: #f0f0f0; font-size: 1.2rem; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 10px; min-width: 120px; justify-content: center; }
+.weather-condition-selector button:hover { background: rgba(255, 255, 255, 0.1); border-color: #B083F3; }
+.weather-condition-selector button.selected { background: linear-gradient(90deg, #B083F3, #6A5ACD); border-color: #B083F3; box-shadow: 0 0 15px rgba(176, 131, 243, 0.3); font-weight: 600; }
+.user-report-submit-button { margin-top: 1.5rem; padding: 12px 20px; border: none; border-radius: 8px; background: linear-gradient(90deg, #6a3093 0%, #a044ff 50%, #f8d447 100%); background-size: 200% auto; color: white; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.4s ease; }
+.user-report-submit-button:hover { background-position: right center; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(160, 68, 255, 0.5); }
+@media (max-width: 900px) { .modal-wrapper { flex-direction: column; max-width: 500px; } #map { height: 300px; } }
+@media (max-width: 768px) {
+    .user-report-modal-body { flex-direction: column; align-items: center; }
+    .user-report-map-container { width: 100%; min-width: auto; }
+    .weather-condition-selector { flex-direction: row; flex-wrap: wrap; width: 100%; justify-content: center; }
+    .weather-condition-selector button { min-width: 100px; flex: 1; }
+}
+/* style.css - VERSÃO FINAL */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Poppins', sans-serif; color: #f0f0f0; background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); display: flex; justify-content: center; align-items: center; min-height: 100vh; text-align: center; overflow: hidden; }
+.container { padding: 2rem; background: rgba(255, 255, 255, 0.05); border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); width: 90%; max-width: 450px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); position: relative; z-index: 10; }
+.header { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 0.5rem; }
+.logo { width: 80px; }
+h1 { display: inline-block; vertical-align: middle; font-size: 2.5rem; background: linear-gradient(90deg, #D4AF37, #B083F3, #6A5ACD); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.subtitle { font-weight: 300; margin-bottom: 2rem; color: #c0c0c0; }
+#forecastForm { display: flex; flex-direction: column; gap: 1rem; }
+
+/* Regra de estilo para todos os inputs e o novo select */
+#cityInput, #dateInput, #eventTypeSelect { width: 100%; padding: 12px 15px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; background: rgba(0, 0, 0, 0.2); color: #f0f0f0; font-size: 1rem; font-family: 'Poppins', sans-serif; -webkit-appearance: none; appearance: none; }
+#eventTypeSelect { background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23c0c0c0%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 15px top 50%; background-size: .65em auto; }
+#eventTypeSelect option { background-color: #302b63; }
+.date-container, .event-container { text-align: left; }
+.date-container label, .event-container label { display: block; margin-bottom: 0.5rem; font-weight: 300; color: #c0c0c0; }
+#dateInput { color-scheme: dark; }
+
+.period-options { border: none; padding: 0; display: flex; justify-content: center; gap: 10px; }
+.period-options legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+.period-options input[type="radio"] { opacity: 0; position: fixed; width: 0; }
+.period-options label { display: inline-block; padding: 10px 20px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50px; background: rgba(0, 0, 0, 0.2); color: #c0c0c0; cursor: pointer; transition: all 0.3s ease; font-weight: 300; }
+.period-options label:hover { background: rgba(255, 255, 255, 0.1); border-color: #B083F3; }
+.period-options input[type="radio"]:checked + label { background: linear-gradient(90deg, #B083F3, #6A5ACD); color: white; font-weight: 600; border-color: #B083F3; box-shadow: 0 0 15px rgba(176, 131, 243, 0.3); }
+
+#forecastButton { padding: 15px; border: none; border-radius: 8px; background: linear-gradient(90deg, #6a3093 0%, #a044ff 50%, #f8d447 100%); background-size: 200% auto; color: white; font-size: 1.2rem; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; transition: all 0.4s ease; }
+#forecastButton:hover { background-position: right center; transform: translateY(-3px); box-shadow: 0 4px 20px rgba(160, 68, 255, 0.5); }
+.modal { position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+.modal.show { opacity: 1; visibility: visible; }
+.modal-wrapper { display: flex; gap: 20px; width: 90%; max-width: 1000px; transform: translateY(-50px); transition: transform 0.3s ease; }
+.modal.show .modal-wrapper { transform: translateY(0); }
+.modal-content { background: #1e1e3f; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); width: 90%; max-width: 550px; position: relative; max-height: 80vh; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.close-button { position: absolute; top: 15px; right: 20px; color: #aaa; font-size: 32px; font-weight: bold; cursor: pointer; line-height: 1; transition: color 0.2s; z-index: 10;}
+.close-button:hover { color: white; }
+.scrollable-content { padding: 2.5rem 2rem 1rem 2rem; overflow-y: auto; flex-grow: 1; }
+#map { flex: 1; height: 80vh; max-height: 750px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); z-index: 1; }
+.weather-map-icon { background: rgba(30, 30, 63, 0.8); border: 2px solid #B083F3; border-radius: 50%; width: 60px !important; height: 60px !important; display: flex; justify-content: center; align-items: center; font-size: 2.5rem; box-shadow: 0 0 20px rgba(176, 131, 243, 0.5); }
+.user-report-icon { background: rgba(255, 107, 107, 0.8); border: 2px solid #fff; border-radius: 50%; width: 40px !important; height: 40px !important; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; box-shadow: 0 0 10px rgba(255, 107, 107, 0.5); }
+#modalBody { text-align: center; }
+#modalBody h2 { margin-bottom: 0.5rem; color: #B083F3; font-size: 2rem; }
+#modalBody .period-subtitle { font-weight: 300; color: #c0c0c0; margin-bottom: 2rem; line-height: 1.4; font-size: 1.1rem; }
+#modalBody .results-container .main-info { margin-bottom: 2.5rem; }
+#modalBody .results-container .main-info .temperature { font-size: 5.5rem; font-weight: 700; line-height: 1; color: #fff; text-shadow: 0 0 25px rgba(255, 255, 255, 0.4); }
+#modalBody .results-container .main-info .rain-chance { font-size: 1.6rem; font-weight: 400; color: #D4AF37; margin-top: 0.8rem; }
+#modalBody .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem; text-align: left; background: rgba(0,0,0,0.3); padding: 1.8rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); }
+#modalBody .detail-item { display: flex; align-items: center; gap: 18px; }
+#modalBody .detail-item .icon { width: 45px; height: 45px; background: linear-gradient(45deg, #6A5ACD, #B083F3); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; color: #fff; box-shadow: 0 4px 15px rgba(106, 90, 205, 0.3); }
+#modalBody .detail-item .text span { display: block; font-size: 0.95rem; color: #aaa; }
+#modalBody .detail-item .text p { font-size: 1.3rem; font-weight: 600; color: #fff; line-height: 1.2; }
+.tips-container { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.1); text-align: left; }
+.tips-container h3 { color: #f8d447; font-weight: 600; margin-bottom: 1rem; text-align: center; }
+.tips-container ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.tips-container li { background: rgba(0, 0, 0, 0.2); padding: 12px 15px; border-radius: 8px; border-left: 3px solid #B083F3; display: flex; align-items: center; gap: 12px; font-weight: 300; color: #c0c0c0; font-size: 0.95rem; }
+.tips-container li::before { content: '💡'; font-size: 1.2rem; }
+.event-image-container { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.1); text-align: center; }
+.event-image-container h3 { color: #f8d447; font-weight: 600; margin-bottom: 1rem; }
+#eventImage { width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 1rem; }
+#downloadImageButton { display: inline-block; padding: 10px 25px; border: none; border-radius: 8px; background: #f8d447; color: #1e1e3f; font-size: 1rem; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.3s ease; }
+#downloadImageButton:hover { background: #fff; box-shadow: 0 0 15px rgba(248, 211, 71, 0.5); }
+#reportButtonInitial { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: linear-gradient(45deg, #6A5ACD, #B083F3); color: white; border: none; border-radius: 50%; font-size: 3rem; line-height: 60px; text-align: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); cursor: pointer; z-index: 999; transition: all 0.3s ease; }
+#reportButtonInitial:hover { transform: scale(1.1) rotate(90deg); background: linear-gradient(45deg, #B083F3, #6A5ACD); }
+.user-report-modal { position: fixed; z-index: 1002; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+.user-report-modal.show { opacity: 1; visibility: visible; }
+.user-report-modal-content { background: #1e1e3f; padding: 2.5rem 2rem; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; position: relative; display: flex; flex-direction: column; gap: 1.5rem; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); transform: translateY(-50px); transition: transform 0.3s ease; }
+.user-report-modal.show .user-report-modal-content { transform: translateY(0); }
+.user-report-modal-content h2 { color: #D4AF37; text-align: center; margin-bottom: 1rem; }
+.user-report-modal-body { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+.user-report-map-container { flex: 1; min-width: 300px; height: 300px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); }
+.weather-condition-selector { display: flex; flex-direction: column; gap: 10px; flex: 0 0 150px; align-items: center; justify-content: center; }
+.weather-condition-selector button { background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; padding: 10px 15px; color: #f0f0f0; font-size: 1.2rem; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 10px; min-width: 120px; justify-content: center; }
+.weather-condition-selector button:hover { background: rgba(255, 255, 255, 0.1); border-color: #B083F3; }
+.weather-condition-selector button.selected { background: linear-gradient(90deg, #B083F3, #6A5ACD); border-color: #B083F3; box-shadow: 0 0 15px rgba(176, 131, 243, 0.3); font-weight: 600; }
+.user-report-submit-button { margin-top: 1.5rem; padding: 12px 20px; border: none; border-radius: 8px; background: linear-gradient(90deg, #6a3093 0%, #a044ff 50%, #f8d447 100%); background-size: 200% auto; color: white; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.4s ease; }
+.user-report-submit-button:hover { background-position: right center; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(160, 68, 255, 0.5); }
+@media (max-width: 900px) { .modal-wrapper { flex-direction: column; max-width: 500px; } #map { height: 300px; } }
+@media (max-width: 768px) {
+    .user-report-modal-body { flex-direction: column; align-items: center; }
+    .user-report-map-container { width: 100%; min-width: auto; }
+    .weather-condition-selector { flex-direction: row; flex-wrap: wrap; width: 100%; justify-content: center; }
+    .weather-condition-selector button { min-width: 100px; flex: 1; }
+}
+/* style.css - VERSÃO FINAL */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Poppins', sans-serif; color: #f0f0f0; background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); display: flex; justify-content: center; align-items: center; min-height: 100vh; text-align: center; overflow: hidden; }
+.container { padding: 2rem; background: rgba(255, 255, 255, 0.05); border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); width: 90%; max-width: 450px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); position: relative; z-index: 10; }
+.header { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 0.5rem; }
+.logo { width: 80px; }
+h1 { display: inline-block; vertical-align: middle; font-size: 2.5rem; background: linear-gradient(90deg, #D4AF37, #B083F3, #6A5ACD); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.subtitle { font-weight: 300; margin-bottom: 2rem; color: #c0c0c0; }
+#forecastForm { display: flex; flex-direction: column; gap: 1rem; }
+
+#cityInput, #dateInput, #eventTypeSelect { width: 100%; padding: 12px 15px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; background: rgba(0, 0, 0, 0.2); color: #f0f0f0; font-size: 1rem; font-family: 'Poppins', sans-serif; -webkit-appearance: none; appearance: none; }
+#eventTypeSelect { background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23c0c0c0%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 15px top 50%; background-size: .65em auto; }
+#eventTypeSelect option { background-color: #302b63; }
+.date-container, .event-container { text-align: left; }
+.date-container label, .event-container label { display: block; margin-bottom: 0.5rem; font-weight: 300; color: #c0c0c0; }
+#dateInput { color-scheme: dark; }
+
+.period-options { border: none; padding: 0; display: flex; justify-content: center; gap: 10px; }
+.period-options legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+.period-options input[type="radio"] { opacity: 0; position: fixed; width: 0; }
+.period-options label { display: inline-block; padding: 10px 20px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50px; background: rgba(0, 0, 0, 0.2); color: #c0c0c0; cursor: pointer; transition: all 0.3s ease; font-weight: 300; }
+.period-options label:hover { background: rgba(255, 255, 255, 0.1); border-color: #B083F3; }
+.period-options input[type="radio"]:checked + label { background: linear-gradient(90deg, #B083F3, #6A5ACD); color: white; font-weight: 600; border-color: #B083F3; box-shadow: 0 0 15px rgba(176, 131, 243, 0.3); }
+
+#forecastButton { padding: 15px; border: none; border-radius: 8px; background: linear-gradient(90deg, #6a3093 0%, #a044ff 50%, #f8d447 100%); background-size: 200% auto; color: white; font-size: 1.2rem; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; transition: all 0.4s ease; }
+#forecastButton:hover { background-position: right center; transform: translateY(-3px); box-shadow: 0 4px 20px rgba(160, 68, 255, 0.5); }
+.modal { position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+.modal.show { opacity: 1; visibility: visible; }
+.modal-wrapper { display: flex; gap: 20px; width: 90%; max-width: 1000px; transform: translateY(-50px); transition: transform 0.3s ease; }
+.modal.show .modal-wrapper { transform: translateY(0); }
+.modal-content { background: #1e1e3f; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); width: 90%; max-width: 550px; position: relative; max-height: 80vh; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.close-button { position: absolute; top: 15px; right: 20px; color: #aaa; font-size: 32px; font-weight: bold; cursor: pointer; line-height: 1; transition: color 0.2s; z-index: 10;}
+.close-button:hover { color: white; }
+.scrollable-content { padding: 2.5rem 2rem; overflow-y: auto; flex-grow: 1; }
+#map { flex: 1; height: 80vh; max-height: 750px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); z-index: 1; }
+.weather-map-icon { background: rgba(30, 30, 63, 0.8); border: 2px solid #B083F3; border-radius: 50%; width: 60px !important; height: 60px !important; display: flex; justify-content: center; align-items: center; font-size: 2.5rem; box-shadow: 0 0 20px rgba(176, 131, 243, 0.5); }
+.user-report-icon { background: rgba(255, 107, 107, 0.8); border: 2px solid #fff; border-radius: 50%; width: 40px !important; height: 40px !important; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; box-shadow: 0 0 10px rgba(255, 107, 107, 0.5); }
+#modalBody { text-align: center; } /* Mantém o texto dentro do modalBody centralizado por padrão */
+#modalBody h2 { margin-bottom: 0.5rem; color: #B083F3; font-size: 2.2rem; text-transform: capitalize; }
+#modalBody .period-subtitle { font-weight: 300; color: #c0c0c0; margin-bottom: 2rem; line-height: 1.4; font-size: 1.1rem; }
+#modalBody .results-container .main-info { margin-bottom: 2.5rem; }
+#modalBody .results-container .main-info .temperature { font-size: 5.5rem; font-weight: 700; line-height: 1; color: #fff; text-shadow: 0 0 25px rgba(255, 255, 255, 0.4); }
+#modalBody .results-container .main-info .rain-chance { font-size: 1.6rem; font-weight: 400; color: #D4AF37; margin-top: 0.8rem; }
+#modalBody .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem; text-align: left; background: rgba(0,0,0,0.3); padding: 1.8rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); }
+#modalBody .detail-item { display: flex; align-items: center; gap: 18px; }
+#modalBody .detail-item .icon { width: 45px; height: 45px; background: linear-gradient(45deg, #6A5ACD, #B083F3); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; color: #fff; box-shadow: 0 4px 15px rgba(106, 90, 205, 0.3); }
+#modalBody .detail-item .text span { display: block; font-size: 0.95rem; color: #aaa; }
+#modalBody .detail-item .text p { font-size: 1.3rem; font-weight: 600; color: #fff; line-height: 1.2; }
+.event-image-container { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.1); text-align: center; }
+.event-image-container h3 { color: #f8d447; font-weight: 600; margin-bottom: 1rem; }
+#eventImage { width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 1rem; }
+#downloadImageButton { display: inline-block; padding: 10px 25px; border: none; border-radius: 8px; background: #f8d447; color: #1e1e3f; font-size: 1rem; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.3s ease; }
+#downloadImageButton:hover { background: #fff; box-shadow: 0 0 15px rgba(248, 211, 71, 0.5); }
+#reportButtonInitial { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: linear-gradient(45deg, #6A5ACD, #B083F3); color: white; border: none; border-radius: 50%; font-size: 3rem; line-height: 60px; text-align: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); cursor: pointer; z-index: 999; transition: all 0.3s ease; }
+#reportButtonInitial:hover { transform: scale(1.1) rotate(90deg); background: linear-gradient(45deg, #B083F3, #6A5ACD); }
+
+/* --- ESTILOS REFINADOS PARA AS DICAS --- */
+.tips-container {
+    margin-top: 2.5rem;
+    padding: 1.5rem;
+    border: 1px solid rgba(248, 211, 71, 0.2);
+    background: rgba(248, 211, 71, 0.05);
+    border-radius: 12px;
+    text-align: left;
+}
+.tips-container h3 {
+    color: #f8d447;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.tips-container h3::before {
+    content: '💡';
+    font-size: 1.5rem;
+}
+.tips-container ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.tips-container li {
+    background: transparent;
+    padding: 0;
+    border: none;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-weight: 300;
+    color: #c0c0c0;
+    font-size: 0.95rem;
+}
+.tips-container li::before {
+    content: '✓';
+    color: #f8d447;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+/* ... (O restante do CSS para modal de report e responsividade) ... */
+.user-report-modal { position: fixed; z-index: 1002; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+.user-report-modal.show { opacity: 1; visibility: visible; }
+.user-report-modal-content { background: #1e1e3f; padding: 2.5rem 2rem; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; position: relative; display: flex; flex-direction: column; gap: 1.5rem; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); transform: translateY(-50px); transition: transform 0.3s ease; }
+.user-report-modal.show .user-report-modal-content { transform: translateY(0); }
+.user-report-modal-content h2 { color: #D4AF37; text-align: center; margin-bottom: 1rem; }
+.user-report-modal-body { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+.user-report-map-container { flex: 1; min-width: 300px; height: 300px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); }
+.weather-condition-selector { display: flex; flex-direction: column; gap: 10px; flex: 0 0 150px; align-items: center; justify-content: center; }
+.weather-condition-selector button { background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; padding: 10px 15px; color: #f0f0f0; font-size: 1.2rem; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 10px; min-width: 120px; justify-content: center; }
+.weather-condition-selector button:hover { background: rgba(255, 255, 255, 0.1); border-color: #B083F3; }
+.weather-condition-selector button.selected { background: linear-gradient(90deg, #B083F3, #6A5ACD); border-color: #B083F3; box-shadow: 0 0 15px rgba(176, 131, 243, 0.3); font-weight: 600; }
+.user-report-submit-button { margin-top: 1.5rem; padding: 12px 20px; border: none; border-radius: 8px; background: linear-gradient(90deg, #6a3093 0%, #a044ff 50%, #f8d447 100%); background-size: 200% auto; color: white; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.4s ease; }
+.user-report-submit-button:hover { background-position: right center; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(160, 68, 255, 0.5); }
+@media (max-width: 900px) { .modal-wrapper { flex-direction: column; max-width: 500px; } #map { height: 300px; } }
+@media (max-width: 768px) {
+    .user-report-modal-body { flex-direction: column; align-items: center; }
+    .user-report-map-container { width: 100%; min-width: auto; }
+    .weather-condition-selector { flex-direction: row; flex-wrap: wrap; width: 100%; justify-content: center; }
+    .weather-condition-selector button { min-width: 100px; flex: 1; }
+}
+
+/* style.css - VERSÃO FINAL */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Poppins', sans-serif; color: #f0f0f0; background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); display: flex; justify-content: center; align-items: center; min-height: 100vh; text-align: center; overflow: hidden; }
+.container { padding: 2rem; background: rgba(255, 255, 255, 0.05); border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); width: 90%; max-width: 450px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); position: relative; z-index: 10; }
+.header { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 0.5rem; }
+.logo { width: 80px; }
+h1 { display: inline-block; vertical-align: middle; font-size: 2.5rem; background: linear-gradient(90deg, #D4AF37, #B083F3, #6A5ACD); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.subtitle { font-weight: 300; margin-bottom: 2rem; color: #c0c0c0; }
+#forecastForm { display: flex; flex-direction: column; gap: 1rem; }
+
+#cityInput, #dateInput, #eventTypeSelect { width: 100%; padding: 12px 15px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; background: rgba(0, 0, 0, 0.2); color: #f0f0f0; font-size: 1rem; font-family: 'Poppins', sans-serif; -webkit-appearance: none; appearance: none; }
+#eventTypeSelect { background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23c0c0c0%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 15px top 50%; background-size: .65em auto; }
+#eventTypeSelect option { background-color: #302b63; }
+.date-container, .event-container { text-align: left; }
+.date-container label, .event-container label { display: block; margin-bottom: 0.5rem; font-weight: 300; color: #c0c0c0; }
+#dateInput { color-scheme: dark; }
+
+.period-options { border: none; padding: 0; display: flex; justify-content: center; gap: 10px; }
+.period-options legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+.period-options input[type="radio"] { opacity: 0; position: fixed; width: 0; }
+.period-options label { display: inline-block; padding: 10px 20px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50px; background: rgba(0, 0, 0, 0.2); color: #c0c0c0; cursor: pointer; transition: all 0.3s ease; font-weight: 300; }
+.period-options label:hover { background: rgba(255, 255, 255, 0.1); border-color: #B083F3; }
+.period-options input[type="radio"]:checked + label { background: linear-gradient(90deg, #B083F3, #6A5ACD); color: white; font-weight: 600; border-color: #B083F3; box-shadow: 0 0 15px rgba(176, 131, 243, 0.3); }
+
+#forecastButton { padding: 15px; border: none; border-radius: 8px; background: linear-gradient(90deg, #6a3093 0%, #a044ff 50%, #f8d447 100%); background-size: 200% auto; color: white; font-size: 1.2rem; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; transition: all 0.4s ease; }
+#forecastButton:hover { background-position: right center; transform: translateY(-3px); box-shadow: 0 4px 20px rgba(160, 68, 255, 0.5); }
+.modal { position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+.modal.show { opacity: 1; visibility: visible; }
+.modal-wrapper { display: flex; gap: 20px; width: 90%; max-width: 1000px; transform: translateY(-50px); transition: transform 0.3s ease; }
+.modal.show .modal-wrapper { transform: translateY(0); }
+
+/* --- LÓGICA DE SCROLL DO MODAL --- */
+.modal-content {
+    background: #1e1e3f;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 90%;
+    max-width: 550px;
+    position: relative;
+    max-height: 80vh; /* Altura máxima do modal */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    flex: 1;
+    display: flex; /* Essencial para a rolagem interna */
+    flex-direction: column;
+    overflow: hidden; /* Esconde a barra de rolagem principal do modal */
+}
+.scrollable-content {
+    padding: 2.5rem 2rem;
+    overflow-y: auto; /* A MÁGICA ACONTECE AQUI: Adiciona scroll se necessário */
+    flex-grow: 1; /* Faz a área de conteúdo ocupar o espaço disponível */
+}
+
+.close-button { position: absolute; top: 15px; right: 20px; color: #aaa; font-size: 32px; font-weight: bold; cursor: pointer; line-height: 1; transition: color 0.2s; z-index: 10;}
+.close-button:hover { color: white; }
+#map { flex: 1; height: 80vh; max-height: 750px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); z-index: 1; }
+.weather-map-icon { background: rgba(30, 30, 63, 0.8); border: 2px solid #B083F3; border-radius: 50%; width: 60px !important; height: 60px !important; display: flex; justify-content: center; align-items: center; font-size: 2.5rem; box-shadow: 0 0 20px rgba(176, 131, 243, 0.5); }
+.user-report-icon { background: rgba(255, 107, 107, 0.8); border: 2px solid #fff; border-radius: 50%; width: 40px !important; height: 40px !important; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; box-shadow: 0 0 10px rgba(255, 107, 107, 0.5); }
+
+#modalBody h2 { margin-bottom: 0.5rem; color: #B083F3; font-size: 2.2rem; text-transform: capitalize; text-align: center;}
+#modalBody .period-subtitle { font-weight: 300; color: #c0c0c0; margin-bottom: 2rem; line-height: 1.4; font-size: 1.1rem; text-align: center;}
+#modalBody .main-info { text-align: center; margin-bottom: 2.5rem; }
+#modalBody .main-info .temperature { font-size: 6rem; font-weight: 700; line-height: 1; color: #fff; text-shadow: 0 0 25px rgba(255, 255, 255, 0.4); }
+#modalBody .main-info .primary-condition { font-size: 1.8rem; font-weight: 400; color: #f0f0f0; margin-top: 0.8rem; }
+.details-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; text-align: center; background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); }
+.detail-item .icon { font-size: 1.8rem; margin-bottom: 0.5rem; opacity: 0.8; }
+.detail-item .label { display: block; font-size: 0.9rem; color: #aaa; margin-bottom: 0.2rem; }
+.detail-item .value { font-size: 1.3rem; font-weight: 600; color: #fff; }
+
+/* --- ESTILOS REFINADOS PARA AS DICAS --- */
+.tips-container { margin-top: 2.5rem; padding: 1.5rem; border: 1px solid rgba(248, 211, 71, 0.2); background: rgba(248, 211, 71, 0.05); border-radius: 12px; text-align: left; }
+.tips-container h3 { color: #f8d447; font-weight: 600; margin-bottom: 1rem; text-align: center; display: flex; justify-content: center; align-items: center; gap: 10px; }
+.tips-container h3::before { content: '💡'; font-size: 1.5rem; }
+.tips-container ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.tips-container li { background: transparent; padding: 0; border: none; display: flex; align-items: flex-start; gap: 12px; font-weight: 300; color: #c0c0c0; font-size: 0.95rem; }
+.tips-container li::before { content: '✓'; color: #f8d447; font-size: 1.2rem; font-weight: 600; }
+
+.event-image-container { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.1); text-align: center; }
+.event-image-container h3 { color: #f8d447; font-weight: 600; margin-bottom: 1rem; }
+#eventImage { width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 1rem; }
+#downloadImageButton { display: inline-block; padding: 10px 25px; border: none; border-radius: 8px; background: #f8d447; color: #1e1e3f; font-size: 1rem; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.3s ease; }
+#downloadImageButton:hover { background: #fff; box-shadow: 0 0 15px rgba(248, 211, 71, 0.5); }
+#reportButtonInitial { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: linear-gradient(45deg, #6A5ACD, #B083F3); color: white; border: none; border-radius: 50%; font-size: 3rem; line-height: 60px; text-align: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); cursor: pointer; z-index: 999; transition: all 0.3s ease; }
+#reportButtonInitial:hover { transform: scale(1.1) rotate(90deg); background: linear-gradient(45deg, #B083F3, #6A5ACD); }
+.user-report-modal { position: fixed; z-index: 1002; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+.user-report-modal.show { opacity: 1; visibility: visible; }
+.user-report-modal-content { background: #1e1e3f; padding: 2.5rem 2rem; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; position: relative; display: flex; flex-direction: column; gap: 1.5rem; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); transform: translateY(-50px); transition: transform 0.3s ease; }
+.user-report-modal.show .user-report-modal-content { transform: translateY(0); }
+.user-report-modal-content h2 { color: #D4AF37; text-align: center; margin-bottom: 1rem; }
+.user-report-modal-body { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+.user-report-map-container { flex: 1; min-width: 300px; height: 300px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); }
+.weather-condition-selector { display: flex; flex-direction: column; gap: 10px; flex: 0 0 150px; align-items: center; justify-content: center; }
+.weather-condition-selector button { background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; padding: 10px 15px; color: #f0f0f0; font-size: 1.2rem; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 10px; min-width: 120px; justify-content: center; }
+.weather-condition-selector button:hover { background: rgba(255, 255, 255, 0.1); border-color: #B083F3; }
+.weather-condition-selector button.selected { background: linear-gradient(90deg, #B083F3, #6A5ACD); border-color: #B083F3; box-shadow: 0 0 15px rgba(176, 131, 243, 0.3); font-weight: 600; }
+.user-report-submit-button { margin-top: 1.5rem; padding: 12px 20px; border: none; border-radius: 8px; background: linear-gradient(90deg, #6a3093 0%, #a044ff 50%, #f8d447 100%); background-size: 200% auto; color: white; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.4s ease; }
+.user-report-submit-button:hover { background-position: right center; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(160, 68, 255, 0.5); }
+@media (max-width: 900px) { .modal-wrapper { flex-direction: column; max-width: 500px; } #map { height: 300px; } }
+@media (max-width: 768px) {
+    .user-report-modal-body { flex-direction: column; align-items: center; }
+    .user-report-map-container { width: 100%; min-width: auto; }
+    .weather-condition-selector { flex-direction: row; flex-wrap: wrap; width: 100%; justify-content: center; }
+    .weather-condition-selector button { min-width: 100px; flex: 1; }
+}
+#modalBody, 
+#modalBody .scrollable-content {
+  scroll-behavior: smooth;
+}
+/* ===== MODAL PRINCIPAL ===== */
+#weatherModal.show {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== CORPO DO MODAL ===== */
+#modalBody {
+  max-height: 85vh;      /* mantém altura máxima */
+  overflow: hidden;       /* impede rolagem duplicada */
+  padding-right: 0;
+}
+
+/* ===== CONTEÚDO ROLÁVEL ===== */
+#modalBody .scrollable-content {
+  max-height: 85vh;
+  overflow-y: scroll;     /* permite rolar */
+  scrollbar-width: none;  /* esconde a barra no Firefox */
+  -ms-overflow-style: none; /* esconde no IE/Edge antigo */
+}
+
+/* ===== REMOVE A BARRA VISUAL (Chrome, Edge, Safari) ===== */
+#modalBody .scrollable-content::-webkit-scrollbar {
+  display: none;
+}
+
+/* Rolagem suave */
+#modalBody .scrollable-content {
+  scroll-behavior: smooth;
+}
