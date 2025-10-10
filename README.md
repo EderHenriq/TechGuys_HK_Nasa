@@ -41,44 +41,5 @@ O Prisma utiliza uma arquitetura simples e robusta:
 2.  **Backend (API em Python):** Um microserviço desenvolvido com Flask e Pandas que consome um dataset histórico do Kaggle (`weatherHistory.csv`).
 3.  **Comunicação:** O frontend faz uma chamada para a nossa API, que filtra e retorna todos os registros históricos para a data solicitada. Os dados são então processados e exibidos de forma clara para o usuário.
 
-## 🏁 Como Rodar o Projeto Localmente
-
-Siga os passos abaixo para testar o Prisma na sua máquina.
-
-### Pré-requisitos
-
-* Python 3.x
-* Pip (gerenciador de pacotes do Python)
-
-### Backend
-
-1.  Clone o repositório:
-    ```bash
-    git clone [https://github.com/SEU_USUARIO/NOME_DO_SEU_REPOSITORIO.git](https://github.com/SEU_USUARIO/NOME_DO_SEU_REPOSITORIO.git)
-    ```
-2.  Navegue até a pasta do backend:
-    ```bash
-    cd NOME_DO_SEU_REPOSITORIO/pasta-do-backend
-    ```
-3.  Instale as dependências:
-    ```bash
-    pip install -r requirements.txt
-    ```
-    *(Dica: não se esqueça de criar um arquivo `requirements.txt` com o comando `pip freeze > requirements.txt`)*
-
-4.  Inicie a API:
-    ```bash
-    python api.py
-    ```
-    O servidor estará rodando em `http://127.0.0.1:5000`.
-
-### Frontend
-
-1.  Navegue até a pasta do frontend.
-2.  Abra o arquivo `index.html` diretamente no seu navegador de preferência (Google Chrome, Firefox, etc.).
-
-E pronto! Agora você pode fazer as consultas pela interface.
-
-## 🧑‍💻 Equipe
 
 
